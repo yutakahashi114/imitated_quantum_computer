@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>量子コンピュータっぽい計算機</title>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <div id="app">
+        <form @submit.prevent="calculate">
+            <!-- 使用するビット数 -->
+            <p><label for="bit">bit数 : </label><input type="text" name="bit" v-model="maxBit" size = "2"></p>
+            <!-- 計算の初期値 -->
+            <p>初期値 : {{ initialValue }}</p>
+            <!-- 論理回路入力欄 -->
+            <ul class="output">
+                <li v-for="(bit,index) in bits">
+                    <input type="text" v-model="bits[index]" size = "1">
+                    <input type="text" v-model="routes[index]">
+                </li>
+            </ul>
+            <input type="submit" value="計算"><br>
+        </form>
+        <!-- 論理回路 -->
+        <ul class="output">
+            <li><span v-bind:style="{ paddingLeft: nowPosition + 'px' }">{{ now }}</span></li>
+            <li v-for="(route,index) in routesOutput">|{{ bits[index] }} > {{ route }}</li>
+        </ul>
+        <!-- 結果表示の変更 -->
+        <form>
+            <p><label><input type="checkbox" v-model="binary">結果を2進数表示</label></p>
+        </form>
+        <!-- 回路全体の状態 -->
+        <p>状態</p>
+        <ul class="output">
+            <li v-for="(value,index) in output" v-if="value != 0">
+                <span v-if="binary">{{ outputBinary[index] }} : {{ value }}</span>
+                <span v-else>{{ index }} : {{ value }}</span>
+            </li>
+        </ul>
+        <!-- 計算結果の確率分布 -->
+        <p>確率</p>
+        <ul class="output">
+            <li v-for="(value,index) in probability" v-if="value != 0">
+                <span v-if="binary">{{ outputBinary[index] }} : {{ value }}</span>
+                <span v-else>{{ index }} : {{ value }}</span>
+            </li>
+        </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/hadamardGate.js"></script>
+    <script src="js/controlNotGate.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
