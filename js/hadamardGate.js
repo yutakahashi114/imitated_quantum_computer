@@ -8,14 +8,20 @@
 const HadamardGate = (input, conversion, maxBit) => {
     const maxValue = Math.pow(2, maxBit);        
     // 結果を入れるための配列
-    let output = new Array(maxValue).fill(0);
+    this.output = [];
+    for (i = 0; i < maxValue; i++) {
+        this.output.push([0, 0]);
+    }
     let result = [];
     // 全ての状態を変換する
     for (let i = 0; i < maxValue; i++) {
-        if (input[i] !== 0) {
+        if (input[i][0] !== 0 || input[i][1] !== 0) {
             result = HadamardGateOneState(i, conversion, maxBit);
-            for (let state in result) {
-                output[state] += input[i] * result[state];
+                for (let state in result) {
+                let add = output[state];
+                add[0] += input[i][0] * result[state];
+                add[1] += input[i][1] * result[state];
+                output[state] = add;
             }
         }
     }
@@ -57,11 +63,10 @@ const HadamardGateOneState = (input, conversion, maxBit) => {
             [downDecimalNumber]: (sqrt2 / 2),
         }
         return result;
-    } else if (bit === '1') {
-        let result = {
-            [upDecimalNumber]: (sqrt2 / 2),
-            [downDecimalNumber]: (-sqrt2 / 2),
-        }
-        return result;
     }
+    let result = {
+        [upDecimalNumber]: (sqrt2 / 2),
+        [downDecimalNumber]: (-sqrt2 / 2),
+    }
+    return result;
 }

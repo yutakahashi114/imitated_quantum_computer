@@ -33,7 +33,7 @@
         <!-- 回路全体の状態 -->
         <p>状態</p>
         <ul class="output">
-            <li v-for="(value,index) in output" v-if="value != 0">
+            <li v-for="(value,index) in output" v-if="probability[index] != 0">
                 <span v-if="binary">{{ outputBinary[index] }} : {{ value }}</span>
                 <span v-else>{{ index }} : {{ value }}</span>
             </li>
@@ -48,8 +48,10 @@
         </ul>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/complex.js"></script>
     <script src="js/hadamardGate.js"></script>
     <script src="js/controlNotGate.js"></script>
+    <script src="js/controlRotationGate.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

@@ -5,10 +5,11 @@ const vm =
             maxBit: 2,
             bits: [0,0],
             routes: ['-hd-', '--@-'],
-            input: [1, 0, 0, 0],
+            input: [[1, 0], [0, 0], [0, 0], [0, 0]],
             now: '',
             nowPosition: 20,
             binary: true,
+            rounding: 10000000,
         },
         methods: {
             // 計算の実行
@@ -33,6 +34,7 @@ const vm =
                     let controlFlag = false;
                     let targetBit = 0;
                     let controlBit = 0;
+                    let rotation = 0;
                     for (let key in routesArray) {
                         // h : アダマール
                         if (routesArray[key][i] === 'h') {
@@ -58,6 +60,28 @@ const vm =
                                 targetBit = Number(key) + 1;
                             }
                         }
+                        // 仮実装
+                        // D : 制御ビット
+                        if (routesArray[key][i] === 'D' && !controlFlag) {
+                            controlFlag = true;
+                            controlBit = Number(key) + 1;
+                        }
+                        // U : 制御ビット
+                        if (routesArray[key][i] === 'U' && targetFlag) {
+                            this.input = ControlRotationGate(this.input, (Number(key) + 1), targetBit, this.maxBit, rotation)
+                            targetFlag = false;
+                        }
+                        // @ : 標的ビット
+                        if (isFinite(routesArray[key][i])) {
+                            rotation = routesArray[key][i]
+                            if (controlFlag) {
+                                this.input = ControlRotationGate(this.input, controlBit, (Number(key) + 1), this.maxBit, rotation);
+                                controlFlag = false;
+                            } else {
+                                targetFlag = true;
+                                targetBit = Number(key) + 1;
+                            }
+                        }
                     }
                     i++;
                 }, 1000);
@@ -77,8 +101,11 @@ const vm =
             initialValue() {
                 const initial = Number.parseInt(this.initialValue,2);
                 const maxValue = Math.pow(2, this.maxBit);
-                this.input = new Array(maxValue).fill(0);
-                this.input[initial] = 1;
+                this.input = [];
+                for (i = 0; i < maxValue; i++) {
+                    this.input.push([0, 0]);
+                }
+                this.input[initial] = [1, 0];
             }
         },
         computed: {
@@ -124,8 +151,10 @@ const vm =
                 let result = [];
                 for (let value of this.input) {
                     // 四捨五入
-                    let round = Math.floor((value * 100000) + 0.5) / 100000;
-                    result.push(round);
+                    let re = Math.floor((value[0] * this.rounding) + 0.5) / this.rounding;
+                    let im = Math.floor((value[1] * this.rounding) + 0.5) / this.rounding;
+                    let complex = re + ' + ' + im + 'i';
+                    result.push(complex);
                 }
                 return result;
             },
@@ -133,8 +162,10 @@ const vm =
             probability() {
                 let result = [];
                 for (let value of this.input) {
+                    // 絶対値
+                    let abs = Abs(value);
                     // 四捨五入
-                    let round = Math.floor((value * value * 100000) + 0.5) / 100000;
+                    let round = Math.floor((abs * this.rounding) + 0.5) / this.rounding;
                     result.push(round);
                 }
                 return result;
