@@ -82,6 +82,11 @@ const vm =
                                 targetBit = Number(key) + 1;
                             }
                         }
+                        // s : スワップ
+                        if (routesArray[key][i] === 's') {
+                            this.input = SwapGate(this.input, this.maxBit);
+                            break;
+                        }
                     }
                     i++;
                 }, 1000);
@@ -121,10 +126,10 @@ const vm =
                         if (routeArray[key] === 'h') {
                             routeArray[key] = 'Η';
                         }
-                        if (routeArray[key] === 'd') {
+                        if (routeArray[key] === 'd' || routeArray[key] === 'D') {
                             routeArray[key] = '┳';
                         }
-                        if (routeArray[key] === 'u') {
+                        if (routeArray[key] === 'u' || routeArray[key] === 'U') {
                             routeArray[key] = '┻';
                         }
                         if (routeArray[key] === '+') {
@@ -133,6 +138,13 @@ const vm =
                         if (routeArray[key] === '@') {
                             routeArray[key] = '◎';
                         }
+                        if (routeArray[key] === 's' || routeArray[key] === '|') {
+                            routeArray[key] = 'Ι';
+                        }
+                        // 半角数字を全角に変換
+                        routeArray[key] = routeArray[key].replace(/[0-9]/g, function (s) {
+                            return String.fromCharCode(s.charCodeAt(0) + 65248);
+                        });
                     }
                     output.push(routeArray.join(''));
                 }
