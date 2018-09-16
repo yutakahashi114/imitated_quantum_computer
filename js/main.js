@@ -148,7 +148,12 @@ const vm =
             },
             // 初期値を計算の入力側に入れる
             initialValue() {
-                const initial = Number.parseInt(this.initialValue,2);
+                let initialArray = [];
+                for (let bit of this.bits) {
+                    initialArray.unshift(bit);
+                }
+                let binaryNumber = initialArray.join('');
+                const initial = Number.parseInt(binaryNumber, 2);
                 const maxValue = Math.pow(2, this.maxBit);
                 this.input = [];
                 for (i = 0; i < maxValue; i++) {
@@ -214,9 +219,11 @@ const vm =
                     // 四捨五入
                     let re = Math.floor((value[0] * this.rounding) + 0.5) / this.rounding;
                     let im = Math.floor((value[1] * this.rounding) + 0.5) / this.rounding;
-                    let complex = re + ' - ' + (-1 * im) + 'i';                    
+                    let complex = '';
                     if (im >= 0) {
                         complex = re + ' + ' + im + 'i';
+                    } else {
+                        complex = re + ' - ' + (-1 * im) + 'i';
                     }
                     result.push(complex);
                 }
