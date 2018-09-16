@@ -21,6 +21,10 @@
             </ul>
             <input type="submit" value="計算"><br>
         </form>
+        <!-- フーリエ変換をセット -->
+        <form @submit.prevent="setFourierTransform">
+            <input type="submit" value="フーリエ変換"><br>
+        </form>
         <!-- 論理回路 -->
         <ul class="output">
             <li><span v-bind:style="{ paddingLeft: nowPosition + 'px' }">{{ now }}</span></li>

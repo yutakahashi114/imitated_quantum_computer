@@ -91,6 +91,50 @@ const vm =
                     i++;
                 }, 1000);
             },
+            setFourierTransform() {
+                // 現在の回路を取得（値渡し）
+                let route = this.routes.concat();
+                for (let i = this.maxBit; i > 0; i--) {
+                    // 以後使わないbitに'-'を追加
+                    let line = '';
+                    for (let j = 0; j < i; j++) {
+                        line += '-';
+                    }
+                    for (let j = i; j < this.maxBit; j++) {
+                        route[j] += line;
+                    }
+
+                    // 'h'からの文字列を追加
+                    line = 'h';
+                    for (let j = 2; j <= i; j++) {
+                        line += j;
+                    }
+                    route[i - 1] += line;
+
+                    // 残りに'-D+'を追加する
+                    // '---D+++'を作る
+                    line = '';
+                    for (let j = 0; j < i - 1; j++) {
+                        line += '-';
+                    }
+                    line += 'd';
+                    for (let j = 0; j < i - 1; j++) {
+                        line += '+';
+                    }
+                    // 少しずつずらして取得し、追加
+                    for (let j = 0; j < i - 1; j++) {
+                        let addLine = line.substr(j, i);
+                        route[j] += addLine;
+                    }
+                }
+                // スワップゲート追加
+                route[0] += 's';
+                for (let i = 1; i < this.maxBit; i++) {
+                    route[i] += '|';
+                }
+                // 回路に代入
+                this.routes = route;
+            }
         },
         watch: {
             // ビット数を変更したときに入力欄を増減させる
@@ -156,7 +200,12 @@ const vm =
                 for (let bit of this.bits) {
                     initial.unshift(bit);
                 }
-                return initial.join('');
+                let binaryNumber = initial.join('');
+                let number = Number.parseInt(binaryNumber, 2);
+                if (this.binary) {
+                    return binaryNumber;
+                }
+                return number;
             },
             // ビット全体の状態を計算
             output() {
@@ -165,7 +214,10 @@ const vm =
                     // 四捨五入
                     let re = Math.floor((value[0] * this.rounding) + 0.5) / this.rounding;
                     let im = Math.floor((value[1] * this.rounding) + 0.5) / this.rounding;
-                    let complex = re + ' + ' + im + 'i';
+                    let complex = re + ' - ' + (-1 * im) + 'i';                    
+                    if (im >= 0) {
+                        complex = re + ' + ' + im + 'i';
+                    }
                     result.push(complex);
                 }
                 return result;
