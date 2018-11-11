@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>位相推定問題</title>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <div id="app">
+        <form @submit.prevent="calculate">
+            <!-- 使用するビット数 -->
+            <p><label for="answer_bit">bit数 : </label><input type="text" name="answer_bit" v-model="answerBit" size = "2"></p>
+            <p>ユニタリ行列</p>
+            <p><label for="dimension">次元 : </label><input type="text" name="dimension" v-model="dimension" size = "2"></p>
+            <ul class="output">
+                <li v-for="(row,index_row) in unitary">
+                    <span v-for="(column,index_column) in row">
+                        <input type="text" v-model="unitary[index_row][index_column]">
+                    </span>
+                </li>
+            </ul>
+            <p>固有状態（ψ）</p>
+            <ul class="output">
+                <li v-for="(row,index) in vector">
+                    <input type="text" v-model="vector[index]">
+                </li>
+            </ul>
+            <input type="submit" value="計算"><br>
+        </form>
+        <!-- 論理回路 -->
+        <ul class="output">
+            <li><span v-bind:style="{ paddingLeft: nowPosition + 'px' }">{{ now }}</span></li>
+            <li v-for="(route,index) in routesOutput">
+                <span v-if="index < answerBit">|0 > {{ route }}</span>
+                <span v-else>|ψ> {{ route }}</span>
+            </li>
+        </ul>
+        <!-- 回路全体の状態 -->
+        <p>状態</p>
+        <ul class="output">
+            <li v-for="(value,index) in output" v-if="probability[index] != 0">
+                <span>{{ index }} : {{ value }}</span>
+            </li>
+        </ul>
+        <!-- 計算結果の確率分布 -->
+        <p>確率</p>
+        <ul class="output">
+            <li v-for="(value,index) in probability" v-if="value != 0">
+                <span>{{ index }} : {{ value }}</span>
+            </li>
+        </ul>
+        <div v-if="result">
+            <p>固有値：{{ displayPhi }}</p>
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/complex.js"></script>
+    <script src="js/hadamardGate.js"></script>
+    <script src="js/controlUnitaryGate.js"></script>
+    <script src="js/controlRotationInverseGate.js"></script>
+    <script src="js/swapGate.js"></script>
+    <script src="js/phase.js"></script>
+</body>
+</html>

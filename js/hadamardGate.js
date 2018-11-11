@@ -6,13 +6,13 @@
  * @return {array} 出力（全ての状態）
  */
 const HadamardGate = (input, conversion, maxBit) => {
-    const maxValue = Math.pow(2, maxBit);        
+    const maxValue = Math.pow(2, maxBit);
     // 結果を入れるための配列
-    this.output = [];
+    let output = [];
     for (i = 0; i < maxValue; i++) {
-        this.output.push([0, 0]);
+        output.push([0, 0]);
     }
-    let result = [];
+    // let result = [];
     // 全ての状態を変換する
     for (let i = 0; i < maxValue; i++) {
         if (input[i][0] !== 0 || input[i][1] !== 0) {

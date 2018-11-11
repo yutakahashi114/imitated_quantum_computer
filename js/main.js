@@ -117,7 +117,7 @@ const vm =
                     for (let j = 0; j < i - 1; j++) {
                         line += '-';
                     }
-                    line += 'd';
+                    line += 'D';
                     for (let j = 0; j < i - 1; j++) {
                         line += '+';
                     }

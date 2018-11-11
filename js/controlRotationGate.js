@@ -10,15 +10,14 @@
 const ControlRotationGate = (input, control, target, maxBit, rot) => {
     const maxValue = Math.pow(2, maxBit);
     // 結果を入れるための配列
-    this.output = [];
+    let output = [];
     for (i = 0; i < maxValue; i++) {
-        this.output.push([0, 0]);
+        output.push([0, 0]);
     }
-    let result = [];
     // 全ての状態を変換する
     for (let i = 0; i < maxValue; i++ ) {
         if (input[i][0] !== 0 || input[i][1] !== 0) {
-            output[i] = input[i];            
+            output[i] = input[i];
             if (ControlRotationGateOneState(i, control, target, maxBit)) {
                 let theta = 2 * Math.PI / (Math.pow(2, rot));
                 let mul = [Math.cos(theta), Math.sin(theta)];
@@ -49,14 +48,7 @@ const ControlRotationGateOneState = (input, control, target, maxBit) => {
     // 制御bit, 標的bitの現在の値
     let controlBit = inputBinaryNumber.charAt(controlCharNumber);
     let targetBit = inputBinaryNumber.charAt(targetCharNumber);
-    
+
     // 制御bitと標的bitが1の場合、標的bitを回転
     return (controlBit === '1' && targetBit === '1');
-    // if (controlBit === '0' || targetBit === '0') {
-    //     return input;
-    // }
-    // let result = inputBinaryNumber.substr(0, targetCharNumber) + (1 - targetBit) + inputBinaryNumber.substr(targetCharNumber + 1);
-    // // 10進数に変換
-    // return Number.parseInt(result,2);
 }
-
