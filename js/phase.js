@@ -32,6 +32,7 @@ const vm =
                         this.now = '';
                         this.nowPosition = 20;
                         clearInterval(loop);
+                        this.result = true;
                         return;
                     }
                     let controlFlag = false;
@@ -76,8 +77,7 @@ const vm =
                         }
                     }
                     i++;
-                }, 100);
-                this.result = true;
+                }, 250);
             }
         },
         watch: {
@@ -190,16 +190,18 @@ const vm =
                     let convertedRow = [];
                     for (let column of row) {
                         // 整数部と虚数部に分割
-                        let match = String(column).match(/^(\-?[0-9\.]*)?([\+\-][0-9\.]*i)?$/);
                         let re = 0;
                         let im = 0;
-                        if (match !== null) {
-                            if (match[1] !== undefined) {
-                                re = Number(match[1]);
-                            }
-                            if (match[2] !== undefined) {
-                                im = Number(match[2].slice(0, -1));
-                            }
+                        let matchRe = String(column).match(/^(\-?[0-9\.]*)$/);
+                        let matchIm = String(column).match(/^(\-?[0-9\.]*)i$/);
+                        let match = String(column).match(/^(\-?[0-9\.]*)([\+\-][0-9\.]*i)$/);
+                        if (matchRe !== null) {
+                            re = Number(matchRe[1]);
+                        } else if (matchIm !== null) {
+                            im = Number(matchIm[1]);
+                        } else if (match !== null) {
+                            re = Number(match[1]);
+                            im = Number(match[2].slice(0, -1));
                         }
                         convertedRow.push([re, im])
                     }
@@ -211,18 +213,20 @@ const vm =
                 let converted = [];
                 for (let row of this.vector) {
                     // 整数部と虚数部に分割
-                    let match = String(row).match(/^(\-?[0-9\.]*)?([\+\-][0-9\.]*i)?$/);
                     let re = 0;
                     let im = 0;
-                    if (match !== null) {
-                        if (match[1] !== undefined) {
-                            re = Number(match[1]);
-                        }
-                        if (match[2] !== undefined) {
-                            im = Number(match[2].slice(0, -1));
-                        }
+                    let matchRe = String(row).match(/^(\-?[0-9\.]*)$/);
+                    let matchIm = String(row).match(/^(\-?[0-9\.]*)i$/);
+                    let match = String(row).match(/^(\-?[0-9\.]*)([\+\-][0-9\.]*i)$/);
+                    if (matchRe !== null) {
+                        re = Number(matchRe[1]);
+                    } else if (matchIm !== null) {
+                        im = Number(matchIm[1]);
+                    } else if (match !== null) {
+                        re = Number(match[1]);
+                        im = Number(match[2].slice(0, -1));
                     }
-                    converted.push([re, im])
+                converted.push([re, im])
                 }
                 return converted;
             },
