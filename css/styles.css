@@ -1,3 +1,11 @@
 .output {
     list-style: none;
 }
+
+.margin-left-20 {
+    margin-left: 20px;
+}
+
+.red {
+    color: #ff0000;
+}

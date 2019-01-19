@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>ショアのアルゴリズム</title>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <div id="app">
+        <!-- 分解したい値 -->
+        <p><label for="M">分解対象 (M) : </label><input type="text" name="M" v-model="M" size = "4"></p>
+        <div>
+            <p>1. Mが偶数であれば素因数2を出力する。</p>
+        </div>
+        <div>
+            <p>2. M = a^b (a≧1, b≧2) かどうか確認する。</p>
+        </div>
+        <div>
+            <p>3. 1からM-1の間で任意にxを選ぶ。もしxとMの最大公約数 (gcd(x, M))が1より大きい (gcd(x, M) ＞ 1)ならば、gcd(x, M)を出力する。</p>
+            <div class="margin-left-20">
+                <label for="x">x : </label><input type="text" name="x" v-model="x" size = "4">
+            </div>
+        </div>
+        <div>
+            <p>4. x, M (x＜M) の位数rを計算する (x^r mod M = 1)</p>
+            <div class="margin-left-20">
+                <form @submit.prevent="calculate">
+                    <!-- 使用するビット数 -->
+                    <p><label for="answer_bit">bit数 : </label><input type="text" name="answer_bit" v-model="answerBit" size = "2"></p>
+                    <input type="submit" value="計算"><br>
+                </form>
+                <!-- 論理回路 -->
+                <ul class="output">
+                    <li><span v-bind:style="{ paddingLeft: nowPosition + 'px' }">{{ now }}</span></li>
+                    <li v-for="(route,index) in routesOutput">
+                        <span v-if="index < answerBit">|0 > {{ route }}</span>
+                        <span v-else>|1 > {{ route }}</span>
+                    </li>
+                </ul>
+                <!-- 回路全体の状態 -->
+                <p>状態</p>
+                <ul class="output">
+                    <!-- <li v-for="(value,index) in output" v-if="display.indexOf(index) != -1"> -->
+                    <li v-for="(value,index) in output" v-if="probability[index] != 0">
+                        <span>{{ index }} : {{ value }}</span>
+                    </li>
+                </ul>
+                <!-- 計算結果の確率分布 -->
+                <p>確率</p>
+                <ul class="output">
+                    <!-- <li v-for="(value,index) in probability" v-if="display.indexOf(index) != -1"> -->
+                    <li v-for="(value,index) in probability" v-if="value != 0">
+                            <span>{{ index }} : {{ value }}</span>
+                    </li>
+                </ul>
+                <p>問題レジスタ</p>
+                <div v-if="is_questions_observed">
+                    <ul class="output">
+                        <li>
+                            <span>{{ observed_questions }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div v-else>
+                    <ul class="output">
+                        <li v-for="(value,index) in probability" v-if="value != 0">
+                            <span>{{ index }} : {{ questions[index] }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    ピークの数 : {{count}}
+                </div>
+            </div>
+        </div>
+        <div>
+            <p>5. もしrが偶数であり、x^(r/2) mod M ≠ -1 ならば、gcd(x^(r/2) - 1, M) とgcd(x^(r/2) + 1, M) を計算する。もしこれらのうち一つがMの因数なら、それを出力する。だめなら3. へ戻る。</p>
+            <div class="margin-left-20">
+                <label for="r">r : </label><input type="text" name="r" v-model="r" size = "4">
+                <p>
+                    {{ x }}^{{ r }} mod {{ M }} = {{ x_power_r_mod_m }}
+                </p>
+                <p>
+                    {{ x }}^({{ r }}/2) mod {{ M }} = {{ x_power_half_r_mod_m }}
+                </p>
+                <div>
+                    <p>
+                        gcd({{ x }}^({{ r }}/2) - 1, {{ M }}) = <span class="red">{{ gcd_x_power_half_r_minus }}</span>
+                    </p>
+                    <p class="margin-left-20">
+                        {{ M }} / {{ gcd_x_power_half_r_minus }} = {{ M/gcd_x_power_half_r_minus }}
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        gcd({{ x }}^({{ r }}/2) + 1, {{ M }}) = <span class="red">{{ gcd_x_power_half_r_plus }}</span>
+                    </p>
+                    <p class="margin-left-20">
+                        {{ M }} / {{ gcd_x_power_half_r_plus }} = {{ M/gcd_x_power_half_r_plus }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="js/complex.js"></script>
+    <script src="js/hadamardGate.js"></script>
+    <script src="js/controlUnitaryOrderGate.js"></script>
+    <script src="js/controlRotationInverseGate.js"></script>
+    <script src="js/swapGate.js"></script>
+    <script src="js/shor.js"></script>
+</body>
+</html>

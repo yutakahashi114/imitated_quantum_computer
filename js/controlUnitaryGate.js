@@ -12,7 +12,7 @@ const ControlUnitaryGate = (input, control, maxBit, unitary, questions, times) =
     const maxValue = Math.pow(2, maxBit);
     // 結果を入れるための配列
     let output = [];
-    for (i = 0; i < maxValue; i++) {
+    for (let i = 0; i < maxValue; i++) {
         output.push([0, 0]);
     }
     // 全ての状態を変換する
